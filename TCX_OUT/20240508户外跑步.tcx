@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><TrainingCenterDatabase
+ xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd"
+ xmlns:ns5="http://www.garmin.com/xmlschemas/ActivityGoals/v1"
+ xmlns:ns3="http://www.garmin.com/xmlschemas/ActivityExtension/v2"
+ xmlns:ns2="http://www.garmin.com/xmlschemas/UserProfile/v2"
+ xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns4="http://www.garmin.com/xmlschemas/ProfileExtension/v1">
+<Activities><Activity Sport="20240508户外跑步"><Id>2024-05-08T10:53:13.000Z</Id><Lap StartTime="2024-05-08T10:53:13.000Z"><TotalTimeSeconds>2704</TotalTimeSeconds><DistanceMeters>8291</DistanceMeters><Track><Trackpoint><Time>2024-05-08T10:53:13.000Z</Time><Position><LatitudeDegrees>24.431346893310547</LatitudeDegrees><LongitudeDegrees>118.10968780517578</LongitudeDegrees></Position></Trackpoint></Track></Lap></Activity></Activities></TrainingCenterDatabase>
