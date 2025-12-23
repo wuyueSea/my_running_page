@@ -17,6 +17,8 @@
   --color-run-date: var(--color-run-date);
   --color-run-table-thead: var(--color-run-table-thead);
   --color-run-row-hover-background: var(--color-run-row-hover-background);
+  /* 新增：表头背景色变量（全局占位） */
+  --color-run-table-thead-bg: var(--color-run-table-thead-bg);
   /* activity-card */
   --color-activity-card: var(--color-activity-card);
   /* svg */
@@ -26,7 +28,7 @@
   --font-mono: var(--font-mono);
 }
 
-/* 1. System Theme (Base) */
+/* 1. System Theme (Base) - 浅色模式 */
 @media (prefers-color-scheme: light) {
   :root {
     --color-brand: var(--color-sky-900);
@@ -44,12 +46,14 @@
     --svg-special-color2: #c5756b;
     --font-sans: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
+    /* 新增：浅色模式表头背景色（原天蓝色 #6AA7F5FF） */
+    --color-run-table-thead-bg: #6AA7F5FF;
   }
 }
 
+/* 1. System Theme (Base) - 深色模式 */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* const nike = 'rgb(224,237,94)'; */
     --color-brand: #e0ed5e;
     --color-secondary: #ccd94a;
     --color-bg: var(--color-neutral-900);
@@ -65,10 +69,12 @@
     --svg-special-color2: #f56c6c;
     --font-sans: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
+    /* 新增：深色模式表头背景色（适配深色的深蓝色，可自定义） */
+    --color-run-table-thead-bg: #2A4B7FFF;
   }
 }
 
-/* 2. Manual Override (Higher Priority) */
+/* 2. Manual Override (Higher Priority) - 手动浅色模式 */
 [data-theme='light'] {
   --color-brand: var(--color-sky-900);
   --color-secondary: var(--color-sky-800);
@@ -86,10 +92,12 @@
   --svg-special-color2: #c5756b;
   --font-sans: 'IBM Plex Sans', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+  /* 新增：手动浅色模式表头背景色 */
+  --color-run-table-thead-bg: #6AA7F5FF;
 }
 
+/* 2. Manual Override (Higher Priority) - 手动深色模式 */
 [data-theme='dark'] {
-  /* const nike = 'rgb(224,237,94)'; */
   --color-brand: #e0ed5e;
   --color-secondary: #ccd94a;
   --color-bg: var(--color-neutral-900);
@@ -105,8 +113,11 @@
   --svg-special-color2: #f56c6c;
   --font-sans: 'IBM Plex Sans', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+  /* 新增：手动深色模式表头背景色 */
+  --color-run-table-thead-bg: #2A4B7FFF;
 }
 
+/* 以下原有样式不变 */
 @layer base {
   html,
   body {
@@ -118,6 +129,8 @@
     font-family: var(--font-sans);
   }
 }
+
+/* ... 其余原有样式完全保留 ... */
 
 img::selection {
   background: transparent;

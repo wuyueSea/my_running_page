@@ -18,15 +18,27 @@ const data: ISiteMetadataResult = {
   siteTitle: "吴越的跑步主页",
   siteUrl: 'https://wuyuesea.qzz.io/',
   logo: '/images/logoHead.jpg',
-  description: '高馳记录跑步',
+  description: '高驰记录跑步',
   navLinks: [
     {
-      name: 'Summary',
+      name: '汇总',
       url: `${getBasePath()}/summary`,
     },
     {
-      name: 'About',
-      url: 'https://blog.wdoc.top',
+      name: '高驰',
+      url: `https://www.coros.com/`,
+    },
+    {
+      name: '中国马拉松',
+      url: `https://www.runchina.org.cn/#/home`,
+    },
+    {
+      name: 'ITRA',
+      url: `https://itra.run/`,
+    },
+    {
+      name: 'UTMB',
+      url: 'https://utmb.world/',
     },
   ],
 };

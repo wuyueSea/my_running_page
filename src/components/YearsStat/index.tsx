@@ -6,9 +6,11 @@ import { INFO_MESSAGE } from '@/utils/const';
 const YearsStat = ({
   year,
   onClick,
+  onClickTypeInYear,
 }: {
   year: string;
   onClick: (_year: string) => void;
+  onClickTypeInYear: (_year: string, _type: string) => void;
 }) => {
   const { years } = useActivities();
 
@@ -37,7 +39,12 @@ const YearsStat = ({
       </section>
       <hr />
       {yearsArrayUpdate.map((yearItem) => (
-        <YearStat key={yearItem} year={yearItem} onClick={onClick} />
+        <YearStat
+          key={yearItem}
+          year={yearItem}
+          onClick={onClick}
+          onClickTypeInYear={onClickTypeInYear}
+        />
       ))}
     </div>
   );

@@ -149,6 +149,18 @@ const Index = () => {
     [geoData]
   );
 
+  // 新增：中英文映射字典（根据你的实际场景补充更多key）
+  const nameCNMap = {
+    Year: '年',
+    Month: '月',
+    Week: '周',
+    Day: '日',
+    Distance: '距离',
+    Pace: '配速',
+    Total: '全部',
+    // 可根据实际业务补充其他需要转换的关键词
+  };
+
   const changeByItem = useCallback(
     (
       item: string,
@@ -161,7 +173,18 @@ const Index = () => {
       }
       setCurrentFilter({ item, func });
       setRunIndex(-1);
-      setTitle(`${item} ${name} Running Heatmap`);
+
+      // 核心修改：条件判断item是否为total，分情况设置标题
+      let title: string;
+      if (item === 'Total') {
+        const itemCN = nameCNMap[item] || item;
+        title = `${itemCN} 跑步热图`;
+      } else {
+        const nameCN = nameCNMap[name] || name; // 非total时，name转中文
+        title = `${item} ${nameCN} 跑步热图`; // 显示 item + 中文name + 跑步热图
+      }
+      setTitle(title);
+
       // Reset single run state when changing filters
       setSingleRunId(null);
       if (window.location.hash) {

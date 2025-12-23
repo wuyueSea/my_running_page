@@ -1,9 +1,131 @@
+/* 表格容器：核心纵向滚动 + 限制10行高度 */
+.tableContainer {
+  width: 100%;
+  overflow-x: auto; /* 横向滚动（列过多） */
+  overflow-y: auto; /* 纵向滚动（行过多） */
+  max-height: 450px; /* PC端：10行左右高度（可微调） */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-run-table-thead) transparent;
+  position: relative; /* 确保sticky参考容器正确 */
+}
+
+/* 移动端适配 - 表格容器 */
 @media only screen and (max-width: 768px) {
   .tableContainer {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    max-height: 280px; /* 移动端10行高度 */
+    -webkit-overflow-scrolling: touch; /* 平滑滚动 */
   }
+}
 
+/* Webkit滚动条美化 - 表格容器 */
+.tableContainer::-webkit-scrollbar {
+  width: 6px; /* 纵向滚动条宽度 */
+  height: 6px; /* 横向滚动条高度 */
+}
+.tableContainer::-webkit-scrollbar-thumb {
+  background-color: #1677ff; /* 可换成主题变量：var(--color-run-table-thead-bg) */
+  border-radius: 3px;
+}
+.tableContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 表格基础样式 */
+.runTable {
+  width: 100%;
+  margin: 0; /* 移除margin避免滚动容器高度异常 */
+  background-color: var(--color-background);
+  font-family: var(--font-mono);
+  table-layout: auto;
+  border-collapse: collapse; /* 合并边框 */
+  border-spacing: 0; /* 消除单元格间隙 */
+}
+
+/* 表头核心样式：固定顶部 + 主题色 + 高层级 */
+.runTable thead {
+  position: sticky;
+  top: 0 !important; /* 强制固定在容器顶部（核心修改） */
+  z-index: 10; /* 确保层级高于内容行 */
+  display: table-header-group; /* 修复Chrome sticky失效 */
+  background: var(--color-run-table-thead-bg); /* 主题背景色 */
+  /* 移除顶部padding，避免表头和容器顶部有空隙 */
+  padding-top: 0;
+}
+
+/* 表头单元格样式 */
+.runTable thead th {
+  padding: 0.5rem; /* 统一内边距，取消额外顶部padding */
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 600;
+  border: 0; /* 移除边框 */
+  background-color: var(--color-run-table-thead-bg) !important; /* 主题背景色 */
+  color: var(--color-background) !important; /* 文字色适配主题 */
+  background-clip: padding-box; /* 防止背景裁剪 */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* 轻微阴影区分表头和内容 */
+  /* 新增：确保表头单元格无额外边距 */
+  margin: 0;
+}
+
+/* 以下原有表格样式完全保留 */
+.runTable thead th:first-child {
+  text-align: left;
+}
+.runTable thead th:last-child {
+  text-align: center;
+}
+
+.runTable th,
+.runTable td {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.runTable th:first-child,
+.runTable td:first-child {
+  text-align: left;
+}
+.runTable th:last-child,
+.runTable td:last-child {
+  text-align: right;
+}
+
+.runRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: var(--color-background) !important; /* 绑定主题背景 */
+}
+
+.runRow td {
+  padding: 0.5rem;
+  border: 0;
+  text-align: center;
+  color: var(--color-run-table-thead); /* 原有主题变量 */
+  background-color: inherit;
+}
+
+.runRow td:first-child {
+  text-align: left;
+}
+.runRow td:last-child {
+  text-align: right;
+}
+
+.runRow:hover {
+  background-color: var(--color-run-row-hover-background); /* 原有主题变量 */
+}
+
+.runRow.selected td {
+  color: red !important;
+  font-weight: 500;
+}
+
+.runDate {
+  color: var(--color-run-date); /* 原有主题变量 */
+}
+
+/* 移动端表格适配 */
+@media only screen and (max-width: 768px) {
   .runTable {
     min-width: 650px;
     font-size: 0.8rem;
@@ -11,90 +133,18 @@
 
   .runTable th,
   .runTable td {
-    padding: 0.25rem !important;
+    padding: 0.25rem;
     white-space: nowrap;
     min-width: 60px;
   }
 
   .runTable th:first-child,
   .runTable td:first-child {
-    min-width: 100px;
+    min-width: 150px;
   }
 
   .runTable th:last-child,
   .runTable td:last-child {
-    min-width: 80px;
+    min-width: 60px;
   }
-}
-
-.runTable {
-  width: 100%;
-  margin: 2rem 0 5rem 0;
-  color: var(--color-run-table-thead);
-  background-color: var(--color-background);
-  font-family: var(--font-mono);
-  table-layout: auto;
-  :is(thead) {
-    color: var(--color-run-table-thead);
-
-    :is(th) {
-      padding: 0.5rem;
-      white-space: nowrap;
-      text-align: center;
-    }
-
-    :is(th):first-child {
-      text-align: left;
-    }
-
-    :is(th):last-child {
-      text-align: right;
-    }
-  }
-  :is(th, td) {
-    white-space: nowrap;
-    text-align: center;
-  }
-
-  :is(th, td):first-child {
-    text-align: left;
-  }
-
-  :is(th, td):last-child {
-    text-align: right;
-  }
-}
-
-.runRow {
-  cursor: pointer;
-  :is(td) {
-    padding: 0.5rem;
-    border: 0;
-    text-align: center; /* 默认居中 */
-  }
-
-  :is(td):first-child {
-    text-align: left;
-  }
-
-  :is(td):last-child {
-    text-align: right;
-  }
-
-  &:hover {
-    background-color: var(--color-run-row-hover-background);
-  }
-}
-
-.selected {
-  color: var(--color-primary);
-}
-
-.tableContainer {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.runDate {
-  color: var(--color-run-date);
 }

@@ -1,35 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // 新增useEffect
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { useTheme, Theme } from '@/hooks/useTheme';
 import styles from './style.module.css';
 
 const Header = () => {
   const { logo, siteUrl, navLinks } = useSiteMetadata();
-  const { setTheme } = useTheme();
+  const { theme: currentTheme, setTheme } = useTheme(); // 新增：获取当前激活的主题
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
 
   const icons = [
-    {
-      id: 'dark',
-      svg: (
-        <svg
-          width="22"
-          height="23"
-          viewBox="0 0 22 23"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M21.7519 15.0137C20.597 15.4956 19.3296 15.7617 18 15.7617C12.6152 15.7617 8.25 11.3965 8.25 6.01171C8.25 4.68211 8.51614 3.41468 8.99806 2.25977C5.47566 3.72957 3 7.20653 3 11.2617C3 16.6465 7.36522 21.0117 12.75 21.0117C16.8052 21.0117 20.2821 18.536 21.7519 15.0137Z"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
-    },
     {
       id: 'light',
       svg: (
@@ -50,15 +30,50 @@ const Header = () => {
         </svg>
       ),
     },
+    {
+      id: 'dark',
+      svg: (
+        <svg
+          width="22"
+          height="23"
+          viewBox="0 0 22 23"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M21.7519 15.0137C20.597 15.4956 19.3296 15.7617 18 15.7617C12.6152 15.7617 8.25 11.3965 8.25 6.01171C8.25 4.68211 8.51614 3.41468 8.99806 2.25977C5.47566 3.72957 3 7.20653 3 11.2617C3 16.6465 7.36522 21.0117 12.75 21.0117C16.8052 21.0117 20.2821 18.536 21.7519 15.0137Z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+    },
   ];
 
+  // 初始化：根据当前主题，设置待切换的图标索引
+  useEffect(() => {
+    if (currentTheme === 'light') {
+      // 当前是light，要切换到dark → 显示dark图标
+      setCurrentIconIndex(1);
+    } else {
+      // 当前是dark，要切换到light → 显示light图标
+      setCurrentIconIndex(0);
+    }
+  }, [currentTheme]);
+
   const handleToggle = () => {
-    const nextIndex = (currentIconIndex + 1) % icons.length;
-    setCurrentIconIndex(nextIndex);
-    setTheme(icons[nextIndex].id as Theme);
+    // 确定要切换的目标主题
+    const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+    // 更新图标索引（对应目标主题）
+    setCurrentIconIndex(targetTheme === 'light' ? 0 : 1);
+    // 设置新主题
+    setTheme(targetTheme as Theme);
   };
 
-  const currentIcon = icons[currentIconIndex];
+  // 当前按钮显示的是「待切换的主题」图标
+  const targetIcon = icons[currentIconIndex];
 
   return (
     <>
@@ -85,10 +100,10 @@ const Header = () => {
               type="button"
               onClick={handleToggle}
               className={`${styles.themeButton} ${styles.themeButtonActive}`}
-              aria-label={`Switch to ${currentIcon.id} theme`}
-              title={`Switch to ${currentIcon.id} theme`}
+              aria-label={`Switch to ${targetIcon.id} theme`} // 提示：切换到待切换的主题
+              title={`Switch to ${targetIcon.id} theme`}
             >
-              <div className={styles.iconWrapper}>{currentIcon.svg}</div>
+              <div className={styles.iconWrapper}>{targetIcon.svg}</div>
             </button>
           </div>
         </div>

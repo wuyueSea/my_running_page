@@ -2,9 +2,9 @@ import useActivities from '@/hooks/useActivities';
 import styles from './style.module.css';
 
 const RunMapButtons = ({
-  changeYear,
-  thisYear,
-}: {
+                         changeYear,
+                         thisYear,
+                       }: {
   changeYear: (_year: string) => void;
   thisYear: string;
 }) => {
@@ -17,14 +17,12 @@ const RunMapButtons = ({
       {yearsButtons.map((year) => (
         <li
           key={`${year}button`}
-          className={
-            styles.button + ` ${year === thisYear ? styles.selected : ''}`
-          }
-          onClick={() => {
-            changeYear(year);
-          }}
+          // 优化：用模板字符串拼接样式（更规范）
+          className={`${styles.button} ${year === thisYear ? styles.selected : ''}`}
+          onClick={() => changeYear(year)}
         >
-          {year}
+          {/* 可选：Total 显示为中文「全部」 */}
+          {year === 'Total' ? '全部' : year}
         </li>
       ))}
     </ul>

@@ -28,7 +28,7 @@ import {
   LIGHTS_ON,
   MAP_TILE_VENDOR,
   MAP_TILE_ACCESS_TOKEN,
-  getRuntimeSingleRunColor,
+  getRuntimeSingleColor,
 } from '@/utils/const';
 import {
   Coordinate,
@@ -82,7 +82,7 @@ const RunMap = ({
 
   // Get theme-aware single run color that updates when theme changes
   const singleRunColor = useMemo(
-    () => getRuntimeSingleRunColor(),
+    () => getRuntimeSingleColor(),
     [themeChangeCounter]
   );
 

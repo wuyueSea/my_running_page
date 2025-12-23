@@ -158,19 +158,37 @@ class GithubDrawer(TracksDrawer):
                     if date_title in self.poster.tracks_by_date:
                         tracks = self.poster.tracks_by_date[date_title]
                         length = sum([t.length for t in tracks])
-                        distance1 = self.poster.special_distance["special_distance"]
-                        distance2 = self.poster.special_distance["special_distance2"]
-                        has_special = distance1 < length / 1000 < distance2
-                        color = self.color(
-                            self.poster.length_range_by_date, length, has_special
-                        )
-                        if length / 1000 >= distance2:
-                            color = self.poster.colors.get(
-                                "special2"
-                            ) or self.poster.colors.get("special")
+                        # 1. 提取三级特殊距离阈值（km）
+                        distance1 = self.poster.special_distance["special_distance"]  # 10km
+                        distance2 = self.poster.special_distance["special_distance2"]  # 20km
+                        distance3 = self.poster.special_distance["special_distance3"]  # 40km
+                        # 2. 计算当日总距离（转km，原单位是米）
+                        length_km = length / 1000
+
+                        # 3. 按「从大到小」判断距离区间，匹配对应颜色（核心补充）
+                        # 优先级：40km+ > 20-40km > 10-20km > 普通轨迹色
+                        if length_km >= distance3:
+                            # ≥40km：使用special3（红色），兜底用special2（黄色）
+                            color = self.poster.colors.get("special3") or self.poster.colors.get("special2")
+                        elif length_km >= distance2:
+                            # 20-40km：使用special2（黄色），兜底用special（天蓝）
+                            color = self.poster.colors.get("special2") or self.poster.colors.get("special")
+                        elif length_km >= distance1:
+                            # 10-20km：使用special（天蓝），兜底用原颜色逻辑
+                            color = self.poster.colors.get("special") or self.color(
+                                self.poster.length_range_by_date, length, True
+                            )
+                        else:
+                            # <10km：使用原颜色逻辑（按长度梯度）
+                            color = self.color(
+                                self.poster.length_range_by_date, length, False
+                            )
+
+                        # 4. 补充当日距离文案
                         str_length = format_float(self.poster.m2u(length))
                         date_title = f"{date_title} {str_length} {km_or_mi}"
 
+                    # 绘制当日单元格
                     rect = dr.rect((rect_x, rect_y), dom, fill=color)
                     rect.set_desc(title=date_title)
                     dr.add(rect)

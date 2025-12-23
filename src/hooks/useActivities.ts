@@ -48,20 +48,34 @@ const useActivities = () => {
 
     activities.forEach((run) => {
       const location = locationForRun(run);
-
       const periodName = titleForRun(run);
+
+      // 1. 原有逻辑：统计periodName（含越野跑）的基础次数
       if (periodName) {
-        runPeriod[periodName] = runPeriod[periodName]
-          ? runPeriod[periodName] + 1
-          : 1;
+        runPeriod[periodName] = runPeriod[periodName] ? runPeriod[periodName] + 1 : 1;
+
+        // 2. 新增核心逻辑：仅当periodName为"越野跑"时，按距离统计全程/半程马拉松
+        if (periodName === '越野跑') {
+          // 处理distance为空的边界情况，兜底为0
+          const distanceMeter = run.distance || 0;
+          const distanceKm = distanceMeter / 1000; // 转换为公里
+
+          // 全程马拉松：距离 > 40km → 全程马拉松次数+1
+          if (distanceKm >= 42.2) {
+            runPeriod['全程马拉松'] = runPeriod['全程马拉松'] ? runPeriod['全程马拉松'] + 1 : 1;
+          }
+          // 半程马拉松：距离 > 20km 且 ≤ 40km → 半程马拉松次数+1（避免重复统计全程）
+          else if (distanceKm >= 21.1) {
+            runPeriod['半程马拉松'] = runPeriod['半程马拉松'] ? runPeriod['半程马拉松'] + 1 : 1;
+          }
+        }
       }
 
+      // 3. 原有逻辑：统计城市、省份、国家、年份（完全保留）
       const { city, province, country } = location;
       // drop only one char city
       if (city.length > 1) {
-        cities[city] = cities[city]
-          ? cities[city] + run.distance
-          : run.distance;
+        cities[city] = cities[city] ? cities[city] + (run.distance || 0) : (run.distance || 0);
       }
       if (province) provinces.add(province);
       if (country) countries.add(standardizeCountryName(country));

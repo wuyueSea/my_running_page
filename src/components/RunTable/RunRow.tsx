@@ -1,5 +1,6 @@
 import {
   formatPace,
+  colorFromType,
   titleForRun,
   formatRunTime,
   Activity,
@@ -24,8 +25,10 @@ const RunRow = ({
   setRunIndex,
 }: IRunRowProperties) => {
   const distance = (run.distance / 1000.0).toFixed(2);
+  const elevation_gain = run.elevation_gain?.toFixed(0);
   const paceParts = run.average_speed ? formatPace(run.average_speed) : null;
   const heartRate = run.average_heartrate;
+  const type = run.type;
   const runTime = formatRunTime(run.moving_time);
   const handleClick = () => {
     if (runIndex === elementIndex) {
@@ -42,11 +45,13 @@ const RunRow = ({
       className={`${styles.runRow} ${runIndex === elementIndex ? styles.selected : ''}`}
       key={run.start_date_local}
       onClick={handleClick}
+      style={{ color: colorFromType(type) }}
     >
       <td>{titleForRun(run)}</td>
+      <td>{type}</td>
       <td>{distance}</td>
-      {SHOW_ELEVATION_GAIN && <td>{(run.elevation_gain ?? 0.0).toFixed(1)}</td>}
-      {paceParts && <td>{paceParts}</td>}
+      {SHOW_ELEVATION_GAIN && <td>{elevation_gain ?? 0.0}</td>}
+      <td>{paceParts}</td>
       <td>{heartRate && heartRate.toFixed(0)}</td>
       <td>{runTime}</td>
       <td className={styles.runDate}>{run.start_date_local}</td>

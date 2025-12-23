@@ -1,7 +1,8 @@
-## 下载
+## 同步数据
+python run_page/keep_sync.py account password
+python run_page/coros_sync.py account password
 
-python run_page/keep_sync.py 13235030330 118Wuyue
-python run_page/coros_sync.py 13235030330 118Wuyue
+## 下载
  
  ```bash
  git clone https://github.com/yihong0618/running_page.git --depth=1

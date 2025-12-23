@@ -52,7 +52,7 @@ class Poster:
             "special": "#FFFF00",
             "track": "#4DD2FF",
         }
-        self.special_distance = {"special_distance": 10, "special_distance2": 20}
+        self.special_distance = {"special_distance": 10, "special_distance2": 20, "special_distance3": 40}
         self.width = 200
         self.height = 300
         self.years = None
@@ -154,6 +154,7 @@ class Poster:
 
         special_distance1 = self.special_distance["special_distance"]
         special_distance2 = self.special_distance["special_distance2"]
+        special_distance3 = self.special_distance["special_distance3"]
 
         (
             total_length,
@@ -165,7 +166,7 @@ class Poster:
 
         d.add(
             d.text(
-                self.trans("Runner"),
+                self.trans("跑者"),
                 insert=(10, self.height - 20),
                 fill=text_color,
                 style=header_style,
@@ -182,7 +183,7 @@ class Poster:
         if self.drawer_type != "monthoflife":
             d.add(
                 d.text(
-                    self.trans("SPECIAL TRACKS"),
+                    self.trans("特殊活动"),
                     insert=(65, self.height - 20),
                     fill=text_color,
                     style=header_style,
@@ -215,9 +216,22 @@ class Poster:
                 )
             )
 
+            d.add(
+                d.rect((65, self.height - 9), (2.6, 2.6), fill=self.colors["special3"])
+            )
+
+            d.add(
+                d.text(
+                    f"Over {special_distance3:.1f} km",
+                    insert=(70, self.height - 6.5),
+                    fill=text_color,
+                    style=small_value_style,
+                )
+            )
+
         d.add(
             d.text(
-                self.trans("STATISTICS"),
+                self.trans("数据"),
                 insert=(120, self.height - 20),
                 fill=text_color,
                 style=header_style,
@@ -225,7 +239,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Number") + f": {len(self.tracks)}",
+                self.trans("次数") + f": {len(self.tracks)}",
                 insert=(120, self.height - 15),
                 fill=text_color,
                 style=small_value_style,
@@ -233,7 +247,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Weekly") + ": " + format_float(len(self.tracks) / weeks),
+                self.trans("每周") + ": " + format_float(len(self.tracks) / weeks),
                 insert=(120, self.height - 10),
                 fill=text_color,
                 style=small_value_style,
@@ -241,7 +255,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Total") + ": " + self.format_distance(total_length),
+                self.trans("总计") + ": " + self.format_distance(total_length),
                 insert=(141, self.height - 15),
                 fill=text_color,
                 style=small_value_style,
@@ -249,7 +263,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Avg") + ": " + self.format_distance(average_length),
+                self.trans("平均") + ": " + self.format_distance(average_length),
                 insert=(141, self.height - 10),
                 fill=text_color,
                 style=small_value_style,
@@ -257,7 +271,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Min") + ": " + self.format_distance(min_length),
+                self.trans("最小") + ": " + self.format_distance(min_length),
                 insert=(167, self.height - 15),
                 fill=text_color,
                 style=small_value_style,
@@ -265,7 +279,7 @@ class Poster:
         )
         d.add(
             d.text(
-                self.trans("Max") + ": " + self.format_distance(max_length),
+                self.trans("最大") + ": " + self.format_distance(max_length),
                 insert=(167, self.height - 10),
                 fill=text_color,
                 style=small_value_style,
