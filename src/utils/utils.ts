@@ -24,6 +24,11 @@ import {
   MAP_TILE_STYLE_DARK,
   getRuntimeSingleColor,
   MAIN_COLOR_LIGHT,
+  RUN_TRAIL_COLOR,
+  CYCLING_COLOR,
+  HIKING_COLOR,
+  WALKING_COLOR,
+  SWIMMING_COLOR,
 } from './const';
 import {
   FeatureCollection,
@@ -303,7 +308,7 @@ const titleForType = (type: string): string => {
       return RUN_TITLES.FULL_MARATHON_RUN_TITLE;
     case 'Half Marathon':
       return RUN_TITLES.HALF_MARATHON_RUN_TITLE;
-      /* 新加高驰运动类型 start*/
+    /* 新加高驰运动类型 start*/
     case 'cycling':
       return RUN_TITLES.COROS_RIDE_TITLE;
     case 'hiking':
@@ -353,12 +358,12 @@ const typeForRun = (run: Activity): string => {
   // 打印关键参数和计算结果（方便调试）
   // console.log('===== typeForRun 函数调试信息 =====');
 
-/*  if (distance > 65) {
-    console.log('原始run:', run);
-    console.log('原始type:', type);
-    console.log('原始subtype:', subtype);
-    console.log('计算后距离(km):', distance);
-  }*/
+  /*  if (distance > 65) {
+      console.log('原始run:', run);
+      console.log('原始type:', type);
+      console.log('原始subtype:', subtype);
+      console.log('计算后距离(km):', distance);
+    }*/
 
   let result: string; // 先定义结果变量，方便后续打印
   switch (type) {
@@ -392,9 +397,9 @@ const typeForRun = (run: Activity): string => {
   // 打印最终输出结果
   // console.log('函数最终返回值:', result);
   // console.log('====================================\n');
-/*  if (distance > 65) {
-    console.log('函数最终返回值:', result);
-  }*/
+  /*  if (distance > 65) {
+      console.log('函数最终返回值:', result);
+    }*/
   return result;
 };
 

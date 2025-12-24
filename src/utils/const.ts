@@ -252,6 +252,12 @@ export const getRuntimeSingleColor = (
 };
 
 // Legacy export for backwards compatibility
+export const RUN_TRAIL_COLOR = 'rgb(255,153,51)';
+export const CYCLING_COLOR = 'rgb(51,255,87)';
+export const HIKING_COLOR = 'rgb(151,51,255)';
+export const WALKING_COLOR = HIKING_COLOR;
+export const SWIMMING_COLOR = 'rgb(255,51,51)';
+
 export const RUN_COLOR = [yellow, yellow_compl];
 export const RIDE_COLOR = [green, green];
 export const VIRTUAL_RIDE_COLOR = [veryPeri, veryPeri];

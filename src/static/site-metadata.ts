@@ -17,7 +17,7 @@ const getBasePath = () => {
 const data: ISiteMetadataResult = {
   siteTitle: "大海的运动旅程",
   siteUrl: 'https://wuyuesea.qzz.io/',
-  logo: '/images/logoHead.jpg',
+  logo: '/images/logohead.png',
   description: '高驰记录跑步',
   navLinks: [
     {
