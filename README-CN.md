@@ -6,6 +6,20 @@ python run_page/coros_sync.py account password
  
  ```bash
  git clone https://github.com/yihong0618/running_page.git --depth=1
+ 
+ # 1. 查看当前远程地址（确认是否真的是SSH）
+ git remote -v
+ # 正确的SSH地址应该是：git@github.com:wuyueSea/my_running_page.git
+ # 若输出仍包含 https:// → 说明地址没改对，重新设置：
+ git remote rm origin
+ git remote add origin git@github.com:wuyueSea/my_running_page.git
+ 
+ # 2. 再次验证地址（必须确保无HTTPS）
+ git remote -v
+ 
+ # 3. 推送
+ git push origin master
+ 
  ```
  
  ## 安装及测试 (node >= 20 python >= 3.11)

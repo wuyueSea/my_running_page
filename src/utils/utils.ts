@@ -62,7 +62,7 @@ const titleForShow = (run: Activity): string => {
     name = run.name;
   }
   return `${name} ${date} ${distance} KM ${
-    !run.summary_polyline ? '(No map data for this workout)' : ''
+    !run.summary_polyline ? '(No map data for this run)' : ''
     }`;
 };
 
@@ -234,11 +234,37 @@ const pathForRun = (run: Activity): Coordinate[] => {
   }
 };
 
+
+/*  高驰适配新增 */
+const colorForRun = (run: Activity): string => {
+  switch (run.type) {
+    case 'Run': {
+      if (run.subtype === 'trail') {
+        return RUN_TRAIL_COLOR;
+      } else if (run.subtype === 'generic') {
+        return RUN_COLOR;
+      }
+      return RUN_COLOR;
+    }
+    case 'cycling':
+      return CYCLING_COLOR;
+    case 'hiking':
+      return HIKING_COLOR;
+    case 'walking':
+      return WALKING_COLOR;
+    case 'swimming':
+      return SWIMMING_COLOR;
+    default:
+      return MAIN_COLOR;
+  }
+};
+
 const geoJsonForRuns = (runs: Activity[]): FeatureCollection<LineString> => ({
   type: 'FeatureCollection',
   features: runs.map((run) => {
     const points = pathForRun(run);
-    const color = colorFromType(run.type);
+    // const color = colorFromType(run.type);
+    const color = colorForRun(run);
     return {
       type: 'Feature',
       properties: {

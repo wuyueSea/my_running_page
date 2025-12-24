@@ -15,7 +15,7 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: "吴越的跑步主页",
+  siteTitle: "大海的运动旅程",
   siteUrl: 'https://wuyuesea.qzz.io/',
   logo: '/images/logoHead.jpg',
   description: '高驰记录跑步',
