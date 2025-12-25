@@ -317,6 +317,8 @@ const titleForType = (type: string): string => {
       return RUN_TITLES.COROS_GENERIC_TITLE;
     case 'trail':
       return RUN_TITLES.COROS_TRAIL_RUN_TITLE;
+    case 'track':
+      return RUN_TITLES.COROS_TRACK_RUN_TITLE;
     case 'indoor_running':
       return RUN_TITLES.COROS_IDOOR_RUN_TITLE;
     /*  新加高驰运动类型 end */
@@ -370,6 +372,8 @@ const typeForRun = (run: Activity): string => {
     case 'Run':
       if(subtype == 'trail'){
         result = 'trail';
+      } else if(subtype == 'track'){
+        result = 'track';
       } else if(subtype == 'indoor_running'){ // 修正为else if，避免冗余判断
         result = 'indoor_running';
       } else if (distance >= 42.2) {
@@ -432,6 +436,10 @@ const typeForRun = (run: Activity): string => {
       return type;
   }
 };*/
+
+const titleForRunNoCity = (run: Activity): string => {
+    return titleForType(typeForRun(run));
+};
 
 const titleForRun = (run: Activity): string => {
   const type = run.type;
@@ -553,16 +561,17 @@ const filterTitleRuns = (run: Activity, title: string) =>
   titleForRun(run) === title;
 
 const filterTypeRuns = (run: Activity, type: string) => {
+  /* 适配高驰修改 */
   switch (type) {
     case 'Full Marathon':
       return (
-        (run.type === 'Run' || run.type === 'Trail Run') && run.distance > 40000
+        (run.type === 'Run' || run.type === 'Trail Run') && run.distance >= 42200
       );
     case 'Half Marathon':
       return (
         (run.type === 'Run' || run.type === 'Trail Run') &&
-        run.distance < 40000 &&
-        run.distance > 20000
+        run.distance < 42200 &&
+        run.distance >= 21100
       );
     default:
       return run.type === type;
@@ -654,6 +663,7 @@ export {
   geoJsonForRuns,
   geoJsonForMap,
   titleForRun,
+  titleForRunNoCity,
   typeForRun,
   titleForType,
   filterYearRuns,

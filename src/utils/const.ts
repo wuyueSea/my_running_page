@@ -36,7 +36,7 @@ const USE_DASH_LINE = true;
 const LINE_OPACITY = 0.4;
 // styling: map height - responsive design
 // Use smaller height on mobile devices for better user experience
-const MAP_HEIGHT = window.innerWidth <= 768 ? 250 : 450;
+const MAP_HEIGHT = window.innerWidth <= 768 ? 250 : 500;
 //set to `false` if you want to hide the road label characters
 const ROAD_LABEL_DISPLAY = true;
 // updated on 2024/11/17: privacy mode is set to true by default
@@ -55,7 +55,7 @@ const IS_CHINESE = true;
 const USE_ANIMATION_FOR_GRID = false;
 const CHINESE_INFO_MESSAGE = (yearLength: number, year: string): string => {
   const yearStr = year === 'Total' ? '所有' : ` ${year} `;
-  return `记录自己跑步 ${yearLength} 年了，下面列表展示的是${yearStr}的数据`;
+  return `记录自己跑步 ${yearLength} 年，下面列表展示的是${yearStr}的数据`;
 };
 const ENGLISH_INFO_MESSAGE = (yearLength: number, year: string): string =>
   `Running Journey with ${yearLength} Years, the table shows year ${year} data`;
@@ -78,6 +78,7 @@ const COROS_RIDE_TITLE = IS_CHINESE ? '骑行' : 'cycling';
 const COROS_HIKE_TITLE = IS_CHINESE ? '徒步' : 'hiking';
 const COROS_GENERIC_TITLE = IS_CHINESE ? '户外有氧' : 'generic';
 /*高驰运动子类型*/
+const COROS_TRACK_RUN_TITLE = IS_CHINESE ? '运动场跑步' : 'track';
 const COROS_IDOOR_RUN_TITLE = IS_CHINESE ? '跑步机' : 'indoor_running';
 const COROS_TRAIL_RUN_TITLE = IS_CHINESE ? '越野跑' : 'trail';
 
@@ -118,6 +119,7 @@ const RUN_TITLES = {
   COROS_GENERIC_TITLE,
   COROS_IDOOR_RUN_TITLE,
   COROS_TRAIL_RUN_TITLE,
+  COROS_TRACK_RUN_TITLE,
 
   FULL_MARATHON_RUN_TITLE,
   HALF_MARATHON_RUN_TITLE,
@@ -144,6 +146,7 @@ const TYPES_MAPPING = {
   'generic': RUN_TITLES.COROS_GENERIC_TITLE,
   'indoor_running': RUN_TITLES.COROS_IDOOR_RUN_TITLE,
   'trail': RUN_TITLES.COROS_TRAIL_RUN_TITLE,
+  'track': RUN_TITLES.COROS_TRACK_RUN_TITLE,
 
   Run: RUN_TITLES.RUN_TITLE,
   'Trail Run': RUN_TITLES.TRAIL_RUN_TITLE,
@@ -205,7 +208,7 @@ export {
   LOADING_TEXT,
 };
 
-const nike = 'rgb(224,237,94)'; // if you want to change the main color, modify this value in src/styles/variables.scss
+const nike = 'rgb(224,237,94)'; // 黄绿色 if you want to change the main color, modify this value in src/styles/variables.scss
 const yellow = 'rgb(224,237,94)';
 const yellow_compl = 'rgb(106, 94, 237)';
 const green = 'rgb(0,237,94)';
@@ -222,8 +225,8 @@ const red = 'rgb(255,0,0)'; //大红色
 // If your map has an offset please change this line
 // issues #92 and #198
 export const NEED_FIX_MAP = false;
-export const MAIN_COLOR = red;
-export const MAIN_COLOR_LIGHT = green;
+export const MAIN_COLOR = nike;
+export const MAIN_COLOR_LIGHT = purple2;
 
 // Static color constants
 export const RUN_COLOR_LIGHT = '#47b8e0';
@@ -257,8 +260,8 @@ export const CYCLING_COLOR = 'rgb(51,255,87)';
 export const HIKING_COLOR = 'rgb(151,51,255)';
 export const WALKING_COLOR = HIKING_COLOR;
 export const SWIMMING_COLOR = 'rgb(255,51,51)';
-
-export const RUN_COLOR = [yellow, yellow_compl];
+export const RUN_COLOR = 'rgb(105,105,105)';
+// export const RUN_COLOR = [yellow, yellow_compl];
 export const RIDE_COLOR = [green, green];
 export const VIRTUAL_RIDE_COLOR = [veryPeri, veryPeri];
 export const HIKE_COLOR = [pink, pink];

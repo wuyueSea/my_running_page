@@ -2,14 +2,14 @@ import { intComma } from '@/utils/utils';
 import { MAIN_COLOR } from '@/utils/const';
 
 const WorkoutStat = ({
-  value,
-  description,
-  pace,
-  className,
-  distance,
-  onClick,
-  color = MAIN_COLOR,
-}: {
+                       value,
+                       description,
+                       pace,
+                       className,
+                       distance,
+                       onClick,
+                       color = MAIN_COLOR,
+                     }: {
   value: string;
   description: string;
   pace: string;
@@ -23,13 +23,13 @@ const WorkoutStat = ({
     onClick={onClick}
     // style={{ color: color }}
   >
-    <span className={`text-5xl font-bold italic`}>{intComma(value)}</span>
+    <span className={`text-4xl font-bold italic`}>{intComma(value)}</span>
     <span className="text-2xl font-semibold italic">{description}</span>
-    {pace && <span className="text-5xl font-bold italic">{' ' + pace}</span>}
+    {pace && <span className="text-4xl font-bold italic">{' ' + pace}</span>}
     {pace && <span className="text-2xl font-semibold italic"> Pace</span>}
 
     {distance && (
-      <span className="text-5xl font-bold italic">{' ' + distance}</span>
+      <span className="text-4xl font-bold italic">{' ' + distance}</span>
     )}
     {distance && <span className="text-2xl font-semibold italic"> KM</span>}
   </div>

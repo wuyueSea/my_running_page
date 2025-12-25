@@ -29,7 +29,7 @@ const data: ISiteMetadataResult = {
       url: `https://www.coros.com/`,
     },
     {
-      name: '中国马拉松',
+      name: '马拉松',
       url: `https://www.runchina.org.cn/#/home`,
     },
     {

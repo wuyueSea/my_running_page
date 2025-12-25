@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { locationForRun, titleForRun } from '@/utils/utils';
+import { locationForRun, titleForRun, titleForRunNoCity } from '@/utils/utils';
 import activities from '@/static/activities.json';
 
 // standardize country names for consistency between mapbox and activities data
@@ -42,6 +42,7 @@ const useActivities = () => {
   const processedData = useMemo(() => {
     const cities: Record<string, number> = {};
     const runPeriod: Record<string, number> = {};
+    const runPeriodNoCity: Record<string, number> = {};
     const provinces: Set<string> = new Set();
     const countries: Set<string> = new Set();
     const years: Set<string> = new Set();
@@ -49,24 +50,30 @@ const useActivities = () => {
     activities.forEach((run) => {
       const location = locationForRun(run);
       const periodName = titleForRun(run);
+      // 获取总的全程马拉松、半程马拉松、越野跑次数（不区分城市）
+      const periodNameNoCity = titleForRunNoCity(run);
 
       // 1. 原有逻辑：统计periodName（含越野跑）的基础次数
       if (periodName) {
         runPeriod[periodName] = runPeriod[periodName] ? runPeriod[periodName] + 1 : 1;
 
-        // 2. 新增核心逻辑：仅当periodName为"越野跑"时，按距离统计全程/半程马拉松
-        if (periodName === '越野跑') {
-          // 处理distance为空的边界情况，兜底为0
-          const distanceMeter = run.distance || 0;
-          const distanceKm = distanceMeter / 1000; // 转换为公里
 
-          // 全程马拉松：距离 > 40km → 全程马拉松次数+1
-          if (distanceKm >= 42.2) {
-            runPeriod['全程马拉松'] = runPeriod['全程马拉松'] ? runPeriod['全程马拉松'] + 1 : 1;
-          }
-          // 半程马拉松：距离 > 20km 且 ≤ 40km → 半程马拉松次数+1（避免重复统计全程）
-          else if (distanceKm >= 21.1) {
-            runPeriod['半程马拉松'] = runPeriod['半程马拉松'] ? runPeriod['半程马拉松'] + 1 : 1;
+        // 2. 新增核心逻辑：仅当periodName为"越野跑"时，按距离统计全程/半程马拉松
+        if (periodNameNoCity === '半程马拉松'|| periodNameNoCity === '全程马拉松'|| periodNameNoCity === '越野跑') {
+          runPeriodNoCity[periodNameNoCity] = runPeriodNoCity[periodNameNoCity] ? runPeriodNoCity[periodNameNoCity] + 1 : 1;
+          if(periodNameNoCity === '越野跑'){
+            // 处理distance为空的边界情况，兜底为0
+            const distanceMeter = run.distance || 0;
+            const distanceKm = distanceMeter / 1000; // 转换为公里
+
+            // 全程马拉松：距离 > 40km → 全程马拉松次数+1
+            if (distanceKm >= 42.2) {
+              runPeriodNoCity['全程马拉松'] = runPeriodNoCity['全程马拉松'] ? runPeriodNoCity['全程马拉松'] + 1 : 1;
+            }
+            // 半程马拉松：距离 > 20km 且 ≤ 40km → 半程马拉松次数+1（避免重复统计全程）
+            else if (distanceKm >= 21.1) {
+              runPeriodNoCity['半程马拉松'] = runPeriodNoCity['半程马拉松'] ? runPeriodNoCity['半程马拉松'] + 1 : 1;
+            }
           }
         }
       }
@@ -93,6 +100,7 @@ const useActivities = () => {
       provinces: [...provinces],
       cities,
       runPeriod,
+      runPeriodNoCity,
       thisYear,
     };
   }, []); // Empty dependency array since activities is static

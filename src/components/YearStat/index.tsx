@@ -96,7 +96,7 @@ const YearStat = ({
           <WorkoutStat
             key="total"
             value={runs.length}
-            description={' 总计'}
+            description={' 运动'}
             distance={(sumDistance / 1000.0).toFixed(0)}
           />
         )}

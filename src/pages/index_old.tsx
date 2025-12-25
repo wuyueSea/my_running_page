@@ -16,7 +16,6 @@ import {
   IViewState,
   filterAndSortRuns,
   filterCityRuns,
-  filterTypeRuns,
   filterTitleRuns,
   filterYearRuns,
   geoJsonForRuns,
@@ -48,9 +47,6 @@ const Index = () => {
 
   // Animation trigger for single runs - increment this to force animation replay
   const [animationTrigger, setAnimationTrigger] = useState(0);
-
-  // 控制组件切换的核心状态（初始false → 默认显示年份统计）
-  const [showLocationStat, setShowLocationStat] = useState(false);
 
   const selectedRunIdRef = useRef<number | null>(null);
   const selectedRunDateRef = useRef<string | null>(null);
@@ -230,13 +226,6 @@ const Index = () => {
     [changeByItem]
   );
 
-  const changeType = useCallback(
-    (type: string) => {
-      changeByItem(type, 'Type', filterTypeRuns);
-    },
-    [changeByItem]
-  );
-
   // For RunTable compatibility - create a mock setActivity function
   const setActivity = useCallback((_newRuns: Activity[]) => {
     // Since we're using memoized runs, we can't directly set activity
@@ -408,52 +397,21 @@ const Index = () => {
       <Helmet>
         <html lang="en" data-theme={theme} />
       </Helmet>
-      <div className="w-full lg:w-1/4">
+      <div className="w-full lg:w-1/3">
         <h1 className="my-12 mt-6 text-5xl font-extrabold italic">
           <a href={siteUrl}>{siteTitle}</a>
         </h1>
-
-        {/* 核心修改：拆分为两个独立按钮，中文环境显示 */}
-        {IS_CHINESE && (
-          <div className="flex gap-3 mb-4">
-            {/* 年份统计按钮：点击设置 showLocationStat = false */}
-            <button
-              onClick={() => setShowLocationStat(false)}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                !showLocationStat
-                  ? 'bg-[var(--color-brand)] text-white' // 激活状态（主题色）
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未激活状态
-                }`}
-            >
-              年份统计
-            </button>
-            {/* 地点统计按钮：点击设置 showLocationStat = true */}
-            <button
-              onClick={() => setShowLocationStat(true)}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                showLocationStat
-                  ? 'bg-[var(--color-brand)] text-white' // 激活状态（主题色）
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未激活状态
-                }`}
-            >
-              地点统计
-            </button>
-          </div>
-        )}
-
-        {/* 核心切换逻辑保持不变 */}
-        {IS_CHINESE && showLocationStat ? (
+        {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
           <LocationStat
             changeYear={changeYear}
             changeCity={changeCity}
-            changeType={changeType}
             changeTitle={changeTitle}
           />
         ) : (
           <YearsStat year={year} onClick={changeYear} />
         )}
       </div>
-      <div className="w-full lg:w-3/4" id="map-container">
+      <div className="w-full lg:w-2/3" id="map-container">
         <RunMap
           title={title}
           viewState={viewState}

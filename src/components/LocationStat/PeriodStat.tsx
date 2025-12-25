@@ -2,20 +2,20 @@ import Stat from '@/components/Stat';
 import useActivities from '@/hooks/useActivities';
 
 const PeriodStat = ({ onClick }: { onClick: (_period: string) => void }) => {
-  const { runPeriod } = useActivities();
-
-  const periodArr = Object.entries(runPeriod);
+  const { runPeriodNoCity } = useActivities();
+  const periodArr = Object.entries(runPeriodNoCity);
   periodArr.sort((a, b) => b[1] - a[1]);
   return (
     <div className="cursor-pointer">
       <section>
-        {periodArr.map(([period, times]) => (
+        {periodArr.map(([periodName, times]) => (
           <Stat
-            key={period}
-            value={period}
+            key={periodName}
+            value={`${periodName}`}
+            //description={type + (times > 1 ? 's' : '')}
             description={` ${times} 次`}
-            citySize={3}
-            onClick={() => onClick(period)}
+            citySize={2}
+            onClick={() => onClick(type)}
           />
         ))}
       </section>
