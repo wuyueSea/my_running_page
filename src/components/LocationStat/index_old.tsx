@@ -50,7 +50,7 @@ const LocationStat = ({
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'year'
               ? 'bg-[var(--color-brand)] text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+              : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white'
             }`}
         >
           年份统计
@@ -61,7 +61,7 @@ const LocationStat = ({
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'cities'
               ? 'bg-[var(--color-brand)] text-white' // 选中状态（主题色）
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未选中状态
+              : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white' // 未选中状态
             }`}
         >
           城市统计
@@ -72,7 +72,7 @@ const LocationStat = ({
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'periodDetail'
               ? 'bg-[var(--color-brand)] text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+              : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white'
             }`}
         >
           城市详情统计

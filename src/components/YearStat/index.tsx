@@ -91,7 +91,10 @@ const YearStat = ({
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
-        <Stat value={year} description=" 旅程" />
+        <Stat
+          value={year === '全部' ? '' : year}
+          description={year === '全部' ? '' : ' 旅程'}
+        />
         {sumDistance > 0 && (
           <WorkoutStat
             key="total"

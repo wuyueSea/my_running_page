@@ -22,7 +22,7 @@ const LocationStat = ({
                         changeType,
                         changeTitle,
                       }: ILocationStatProps) => {
-  // 定义状态管理当前激活的标签（初始显示城市统计）
+  // 定义状态管理当前激活的标签（初始显示年份统计）
   const [activeTab, setActiveTab] = useState<'year' | 'cities' | 'periodDetail'>('year');
 
   return (
@@ -43,25 +43,25 @@ const LocationStat = ({
       <LocationSummary />
       <PeriodStat onClick={changeType} />
 
-      {/* 2. 切换按钮组 */}
+      {/* 2. 切换按钮组（仅修改文字颜色为 var(--color-brand-button)） */}
       <div className="flex gap-3 my-4">
         <button
           onClick={() => setActiveTab('year')}
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'year'
-              ? 'bg-[var(--color-brand)] text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+              ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
+              : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
             }`}
         >
-          年份统计
+          运动汇总
         </button>
 
         <button
           onClick={() => setActiveTab('cities')}
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'cities'
-              ? 'bg-[var(--color-brand)] text-white' // 选中状态（主题色）
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未选中状态
+              ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
+              : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
             }`}
         >
           城市统计
@@ -71,8 +71,8 @@ const LocationStat = ({
           onClick={() => setActiveTab('periodDetail')}
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeTab === 'periodDetail'
-              ? 'bg-[var(--color-brand)] text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+              ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
+              : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
             }`}
         >
           城市详情统计

@@ -77,6 +77,7 @@
 /* 2. Manual Override (Higher Priority) - 手动浅色模式 */
 [data-theme='light'] {
   --color-brand: var(--color-sky-900);
+  --color-brand-button: #FFFFFF;
   --color-secondary: var(--color-sky-800);
   --color-bg: var(--color-neutral-100);
   --color-tx: var(--color-sky-900);
@@ -99,6 +100,7 @@
 /* 2. Manual Override (Higher Priority) - 手动深色模式 */
 [data-theme='dark'] {
   --color-brand: #e0ed5e;
+  --color-brand-button: #000000;
   --color-secondary: #ccd94a;
   --color-bg: var(--color-neutral-900);
   --color-tx: var(--color-brand);

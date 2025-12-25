@@ -21,7 +21,7 @@ const data: ISiteMetadataResult = {
   description: '高驰记录跑步',
   navLinks: [
     {
-      name: '汇总',
+      name: '数据分析',
       url: `${getBasePath()}/summary`,
     },
     {
@@ -39,6 +39,10 @@ const data: ISiteMetadataResult = {
     {
       name: 'UTMB',
       url: 'https://utmb.world/',
+    },
+    {
+      name: '感谢yihong',
+      url: 'https://github.com/yihong0618/running_page',
     },
   ],
 };

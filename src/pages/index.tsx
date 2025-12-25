@@ -49,8 +49,8 @@ const Index = () => {
   // Animation trigger for single runs - increment this to force animation replay
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
-  // 控制组件切换的核心状态（初始false → 默认显示年份统计）
-  const [showLocationStat, setShowLocationStat] = useState(false);
+  // 初始值改为 true → 默认显示地点统计
+  const [showLocationStat, setShowLocationStat] = useState(true);
 
   const selectedRunIdRef = useRef<number | null>(null);
   const selectedRunDateRef = useRef<string | null>(null);
@@ -413,35 +413,36 @@ const Index = () => {
           <a href={siteUrl}>{siteTitle}</a>
         </h1>
 
-        {/* 核心修改：拆分为两个独立按钮，中文环境显示 */}
+        {/* 核心修改：激活态字体为主题色，背景浅灰；未激活态字体弱化，背景白色 */}
         {IS_CHINESE && (
           <div className="flex gap-3 mb-4">
-            {/* 年份统计按钮：点击设置 showLocationStat = false */}
-            <button
-              onClick={() => setShowLocationStat(false)}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                !showLocationStat
-                  ? 'bg-[var(--color-brand)] text-white' // 激活状态（主题色）
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未激活状态
-                }`}
-            >
-              年份统计
-            </button>
-            {/* 地点统计按钮：点击设置 showLocationStat = true */}
+            {/* 地点统计按钮 */}
             <button
               onClick={() => setShowLocationStat(true)}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 showLocationStat
-                  ? 'bg-[var(--color-brand)] text-white' // 激活状态（主题色）
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white' // 未激活状态
+                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
+                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
                 }`}
             >
               地点统计
             </button>
+
+            {/* 年份统计按钮 */}
+            <button
+              onClick={() => setShowLocationStat(false)}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                !showLocationStat
+                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
+                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
+                }`}
+            >
+              年份统计
+            </button>
           </div>
         )}
 
-        {/* 核心切换逻辑保持不变 */}
+        {/* 核心切换逻辑（初始显示地点统计） */}
         {IS_CHINESE && showLocationStat ? (
           <LocationStat
             changeYear={changeYear}
