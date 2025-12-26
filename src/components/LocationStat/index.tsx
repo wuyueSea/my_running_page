@@ -75,7 +75,7 @@ const LocationStat = ({
               : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
             }`}
         >
-          城市详情统计
+          城市运动详情
         </button>
       </div>
 
