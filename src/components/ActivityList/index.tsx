@@ -26,6 +26,7 @@ import { loadSvgComponent } from '@/utils/svgUtils';
 import { SHOW_ELEVATION_GAIN, HOME_PAGE_TITLE } from '@/utils/const';
 import RoutePreview from '@/components/RoutePreview';
 import { Activity } from '@/utils/utils';
+
 // Layout constants (avoid magic numbers)
 const ITEM_WIDTH = 280;
 const ITEM_GAP = 20;
@@ -42,6 +43,7 @@ const VIRTUAL_LIST_STYLES = {
       'var(--color-primary, var(--color-scrollbar-thumb, rgba(0,0,0,0.4)))',
   },
 };
+
 const MonthOfLifeSvg = (sportType: string) => {
   const path = sportType === 'all' ? './mol.svg' : `./mol_${sportType}.svg`;
   return lazy(() => loadSvgComponent(totalStat, path));
@@ -103,13 +105,29 @@ type IntervalType = 'year' | 'month' | 'week' | 'day' | 'life';
 // A row group contains multiple activity card data items that will be rendered in one virtualized row
 type RowGroup = Array<{ period: string; summary: ActivitySummary }>;
 
+// 核心修复：添加中英文运动类型映射表（关键！）
+const sportTypeCNToENMap = {
+  '全部': 'all',
+  '跑步': 'Run',
+  '徒步': 'hiking',
+  '健走': 'walking',
+  '骑行': 'cycling',
+  '户外有氧': 'generic',
+  '游泳': 'swimming'
+};
+// 反向映射（备用）
+const sportTypeENToCNMap = Object.entries(sportTypeCNToENMap).reduce((acc, [cn, en]) => {
+  acc[en] = cn;
+  return acc;
+}, {} as Record<string, string>);
+
 const ActivityCardInner: React.FC<ActivityCardProps> = ({
-  period,
-  summary,
-  dailyDistances,
-  interval,
-  activities = [],
-}) => {
+                                                          period,
+                                                          summary,
+                                                          dailyDistances,
+                                                          interval,
+                                                          activities = [],
+                                                        }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const handleCardClick = () => {
     if (interval === 'day' && activities.length > 0) {
@@ -178,12 +196,12 @@ const ActivityCardInner: React.FC<ActivityCardProps> = ({
               {summary.totalDistance.toFixed(2)} km
             </p>
             {SHOW_ELEVATION_GAIN &&
-              summary.totalElevationGain !== undefined && (
-                <p>
-                  <strong>{ACTIVITY_TOTAL.TOTAL_ELEVATION_GAIN_TITLE}:</strong>{' '}
-                  {summary.totalElevationGain.toFixed(0)} m
-                </p>
-              )}
+            summary.totalElevationGain !== undefined && (
+              <p>
+                <strong>{ACTIVITY_TOTAL.TOTAL_ELEVATION_GAIN_TITLE}:</strong>{' '}
+                {summary.totalElevationGain.toFixed(0)} m
+              </p>
+            )}
             <p>
               <strong>{ACTIVITY_TOTAL.AVERAGE_SPEED_TITLE}:</strong>{' '}
               {formatPace(summary.averageSpeed)}
@@ -294,7 +312,7 @@ const activityCardAreEqual = (
     s1.maxSpeed !== s2.maxSpeed ||
     s1.location !== s2.location ||
     (s1.totalElevationGain ?? undefined) !==
-      (s2.totalElevationGain ?? undefined) ||
+    (s2.totalElevationGain ?? undefined) ||
     (s1.averageHeartRate ?? undefined) !== (s2.averageHeartRate ?? undefined)
   ) {
     return false;
@@ -313,32 +331,27 @@ const ActivityCard = React.memo(ActivityCardInner, activityCardAreEqual);
 
 const ActivityList: React.FC = () => {
   const [interval, setInterval] = useState<IntervalType>('month');
-  const [sportType, setSportType] = useState<string>('all');
+  // 初始值改为中文“全部”
+  const [sportType, setSportType] = useState<string>('全部');
   const [sportTypeOptions, setSportTypeOptions] = useState<string[]>([]);
 
   useEffect(() => {
+    // 1. 先获取所有英文类型
     const sportTypeSet = new Set(activities.map((activity) => activity.type));
-    if (sportTypeSet.has('Run')) {
-      sportTypeSet.delete('Run');
-      sportTypeSet.add('running');
-    }
-    if (sportTypeSet.has('Walk')) {
-      sportTypeSet.delete('Walk');
-      sportTypeSet.add('walking');
-    }
-    if (sportTypeSet.has('Ride')) {
-      sportTypeSet.delete('Ride');
-      sportTypeSet.add('cycling');
-    }
-    const uniqueSportTypes = [...sportTypeSet];
-    uniqueSportTypes.unshift('all');
+    // 2. 转换为中文选项（基于映射表）
+    const cnSportTypes = Array.from(sportTypeSet).map(enType => {
+      // 处理特殊情况：Run → 跑步（映射表中是“跑步”: "Run"）
+      return sportTypeENToCNMap[enType] || enType;
+    });
+    // 3. 添加“全部”并去重
+    const uniqueSportTypes = Array.from(new Set(['全部', ...cnSportTypes]));
     setSportTypeOptions(uniqueSportTypes);
   }, []);
 
   // 添加useEffect监听interval变化
   useEffect(() => {
-    if (interval === 'life' && sportType !== 'all') {
-      setSportType('all');
+    if (interval === 'life' && sportType !== '全部') {
+      setSportType('全部');
     }
   }, [interval, sportType]);
 
@@ -359,18 +372,24 @@ const ActivityList: React.FC = () => {
 
   function groupActivitiesFn(
     intervalArg: IntervalType,
-    sportTypeArg: string
+    sportTypeArg: string // 这里传入的是中文（如“健走”“骑行”）
   ): ActivityGroups {
+    // 核心修复：将中文类型转换为对应的英文类型
+    const enSportType = sportTypeCNToENMap[sportTypeArg] || sportTypeArg;
+
     return (activities as Activity[])
       .filter((activity) => {
-        if (sportTypeArg === 'all') return true;
-        if (sportTypeArg === 'running')
+        if (enSportType === 'all') return true;
+        // 用转换后的英文类型匹配activity.type
+        if (enSportType === 'Run')
           return activity.type === 'running' || activity.type === 'Run';
-        if (sportTypeArg === 'walking')
+        if (enSportType === 'walking')
           return activity.type === 'walking' || activity.type === 'Walk';
-        if (sportTypeArg === 'cycling')
+        if (enSportType === 'cycling')
           return activity.type === 'cycling' || activity.type === 'Ride';
-        return activity.type === sportTypeArg;
+        if (enSportType === 'swimming')
+          return activity.type === 'swimming' || activity.type === 'Swim';
+        return activity.type === enSportType;
       })
       .reduce((acc: ActivityGroups, activity) => {
         const date = new Date(activity.start_date_local);
@@ -636,7 +655,7 @@ const ActivityList: React.FC = () => {
             <option
               key={type}
               value={type}
-              disabled={interval === 'life' && type !== 'all'}
+              disabled={interval === 'life' && type !== '全部'}
             >
               {type}
             </option>
@@ -650,20 +669,20 @@ const ActivityList: React.FC = () => {
           <option value="month">{ACTIVITY_TOTAL.MONTHLY_TITLE}</option>
           <option value="week">{ACTIVITY_TOTAL.WEEKLY_TITLE}</option>
           <option value="day">{ACTIVITY_TOTAL.DAILY_TITLE}</option>
-          <option value="life">Life</option>
+          {/*<option value="life">Life</option>*/}
         </select>
       </div>
 
       {interval === 'life' && (
         <div className={styles.lifeContainer}>
           <Suspense fallback={<div>Loading SVG...</div>}>
-            {(sportType === 'running' || sportType === 'Run') && <RunningSvg />}
-            {sportType === 'walking' && <WalkingSvg />}
-            {sportType === 'hiking' && <HikingSvg />}
-            {sportType === 'cycling' && <CyclingSvg />}
-            {sportType === 'swimming' && <SwimmingSvg />}
-            {sportType === 'skiing' && <SkiingSvg />}
-            {sportType === 'all' && <AllSvg />}
+            {(sportType === '跑步' || sportType === 'Run') && <RunningSvg />}
+            {sportType === '徒步' && <HikingSvg />}
+            {sportType === '健走' && <WalkingSvg />}
+            {sportType === '骑行' && <CyclingSvg />}
+            {sportType === '游泳' && <SwimmingSvg />}
+            {sportType === '滑雪' && <SkiingSvg />}
+            {sportType === '全部' && <AllSvg />}
           </Suspense>
         </div>
       )}
@@ -688,7 +707,7 @@ const ActivityList: React.FC = () => {
                   totalDistance: dataList[0].summary.totalDistance,
                   averageSpeed: dataList[0].summary.totalTime
                     ? dataList[0].summary.totalDistance /
-                      (dataList[0].summary.totalTime / 3600)
+                    (dataList[0].summary.totalTime / 3600)
                     : 0,
                   totalTime: dataList[0].summary.totalTime,
                   count: dataList[0].summary.count,
@@ -701,7 +720,7 @@ const ActivityList: React.FC = () => {
                   averageHeartRate:
                     dataList[0].summary.heartRateCount > 0
                       ? dataList[0].summary.totalHeartRate /
-                        dataList[0].summary.heartRateCount
+                      dataList[0].summary.heartRateCount
                       : undefined,
                 }}
                 dailyDistances={dataList[0].summary.dailyDistances}
@@ -764,7 +783,7 @@ const ActivityList: React.FC = () => {
                               totalDistance: cardData.summary.totalDistance,
                               averageSpeed: cardData.summary.totalTime
                                 ? cardData.summary.totalDistance /
-                                  (cardData.summary.totalTime / 3600)
+                                (cardData.summary.totalTime / 3600)
                                 : 0,
                               totalTime: cardData.summary.totalTime,
                               count: cardData.summary.count,
@@ -777,7 +796,7 @@ const ActivityList: React.FC = () => {
                               averageHeartRate:
                                 cardData.summary.heartRateCount > 0
                                   ? cardData.summary.totalHeartRate /
-                                    cardData.summary.heartRateCount
+                                  cardData.summary.heartRateCount
                                   : undefined,
                             }}
                             dailyDistances={cardData.summary.dailyDistances}

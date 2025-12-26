@@ -78,6 +78,8 @@
 [data-theme='light'] {
   --color-brand: var(--color-sky-900);
   --color-brand-button: #FFFFFF;
+  --color-head-nav: #4dd2ff;
+  --color-years_select: #FFFFFF;
   --color-secondary: var(--color-sky-800);
   --color-bg: var(--color-neutral-100);
   --color-tx: var(--color-sky-900);
@@ -101,6 +103,8 @@
 [data-theme='dark'] {
   --color-brand: #e0ed5e;
   --color-brand-button: #000000;
+  --color-head-nav: #d0d0d0;
+  --color-years_select: #000000;
   --color-secondary: #ccd94a;
   --color-bg: var(--color-neutral-900);
   --color-tx: var(--color-brand);

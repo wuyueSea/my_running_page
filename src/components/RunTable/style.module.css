@@ -23,7 +23,7 @@
   height: 6px; /* 横向滚动条高度 */
 }
 .tableContainer::-webkit-scrollbar-thumb {
-  background-color: #1677ff; /* 可换成主题变量：var(--color-run-table-thead-bg) */
+  background-color: #ababab; /* 可换成主题变量：var(--color-run-table-thead-bg) */
   border-radius: 3px;
 }
 .tableContainer::-webkit-scrollbar-track {
@@ -59,8 +59,8 @@
   text-align: center;
   font-weight: 600;
   border: 0; /* 移除边框 */
-  background-color: var(--color-run-table-thead-bg) !important; /* 主题背景色 */
-  color: var(--color-background) !important; /* 文字色适配主题 */
+  background-color: var(--color-background) !important; /* 主题背景色 */
+  color: var(--color-tx) !important; /* 文字色适配主题 */
   background-clip: padding-box; /* 防止背景裁剪 */
   box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* 轻微阴影区分表头和内容 */
   /* 新增：确保表头单元格无额外边距 */

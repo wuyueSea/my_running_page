@@ -36,7 +36,7 @@ python run_page/coros_sync.py account password
  访问 <http://localhost:5173/> 查看
  
  ### KEEP
- python run_page/keep_sync.py ${your mobile} ${your password} --with-gpx --sync-types running cycling hiking
+ python run_page/keep_sync.py ${your mobile} ${your password} --with-gpx --sync-types running cycling hiking swimming
  
  ### COROS 高驰
  
@@ -452,16 +452,16 @@ python run_page/keep_sync.py ${your mobile} ${your password} --with-gpx
 python run_page/keep_sync.py 13333xxxx example --with-gpx
 ```
 
-> 增加了 keep 对其他运动类型的支持，目前可选的有 running, cycling, hiking，默认的运动数据类型为 running。
+> 增加了 keep 对其他运动类型的支持，目前可选的有 running, cycling, hiking，swimming，默认的运动数据类型为 running。
 
 ```bash
-python run_page/keep_sync.py ${your mobile} ${your password} --with-gpx --sync-types running cycling hiking
+python run_page/keep_sync.py ${your mobile} ${your password} --with-gpx --sync-types running cycling hiking swimming
 ```
 
 示例：
 
 ```bash
-python run_page/keep_sync.py 13333xxxx example --with-gpx --sync-types running cycling hiking
+python run_page/keep_sync.py 13333xxxx example --with-gpx --sync-types running cycling hiking swimming
 ```
 
 </details>
@@ -1014,7 +1014,7 @@ python run_page/igpsport_sync.py ${iGPSPORT_mobile} ${iGPSPORTS_password} --with
 示例：
 
 ```bash
-python run_page/keep_to_strava_sync.py ${your mobile} ${your password} ${client_id} ${client_secret} ${strava_refresh_token} --sync-types running cycling hiking
+python run_page/keep_to_strava_sync.py ${your mobile} ${your password} ${client_id} ${client_secret} ${strava_refresh_token} --sync-types running cycling hiking swimming
 ```
 
 #### 解决的需求

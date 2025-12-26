@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom'; // 确保导入 Link 组件
 import { Analytics } from '@vercel/analytics/react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '@/components/Layout';
@@ -17,6 +18,7 @@ import {
   filterAndSortRuns,
   filterCityRuns,
   filterTypeRuns,
+  filterTypeName,
   filterTitleRuns,
   filterYearRuns,
   geoJsonForRuns,
@@ -27,6 +29,12 @@ import {
   RunIds,
 } from '@/utils/utils';
 import { useTheme } from '@/hooks/useTheme';
+
+// 修复：内置 getBasePath 方法，避免导出报错
+const getBasePath = () => {
+  const baseUrl = import.meta.env.BASE_URL;
+  return baseUrl === '/' ? '' : baseUrl;
+};
 
 const Index = () => {
   const { siteTitle, siteUrl } = useSiteMetadata();
@@ -41,7 +49,9 @@ const Index = () => {
   const [currentFilter, setCurrentFilter] = useState<{
     item: string;
     func: (_run: Activity, _value: string) => boolean;
-  }>({ item: thisYear, func: filterYearRuns });
+    item2: string | null;
+    func2: ((_run: Activity, _value: string) => boolean) | null;
+  }>({ item: thisYear, func: filterYearRuns, item2: null, func2: null });
 
   // State to track if we're showing a single run from URL hash
   const [singleRunId, setSingleRunId] = useState<number | null>(null);
@@ -198,6 +208,33 @@ const Index = () => {
     [thisYear]
   );
 
+  const changeTypeInYear = useCallback(
+    (year: string, type: string) => {
+      scrollToMap();
+      // type in year, filter year first, then type
+      if (year != 'Total') {
+        setYear(year);
+        setCurrentFilter({
+          item: year,
+          func: filterYearRuns,
+          item2: type,
+          func2: filterTypeRuns,
+        });
+      } else {
+        setYear(thisYear);
+        setCurrentFilter({ item: type, func: filterTypeRuns });
+      }
+      setRunIndex(-1);
+      setTitle(`${year} ${type} Type Heatmap`);
+      // Reset single run state when changing filters
+      setSingleRunId(null);
+      if (window.location.hash) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+    },
+    [thisYear]
+  );
+
   const changeYear = useCallback(
     (y: string) => {
       // default year
@@ -232,7 +269,8 @@ const Index = () => {
 
   const changeType = useCallback(
     (type: string) => {
-      changeByItem(type, 'Type', filterTypeRuns);
+      // changeByItem(type, 'Type', filterTypeRuns);
+      changeByItem(type, 'Type', filterTypeName);
     },
     [changeByItem]
   );
@@ -413,32 +451,38 @@ const Index = () => {
           <a href={siteUrl}>{siteTitle}</a>
         </h1>
 
-        {/* 核心修改：激活态字体为主题色，背景浅灰；未激活态字体弱化，背景白色 */}
+        {/* 核心修改：数据分析按钮替换为 Link 组件 */}
         {IS_CHINESE && (
           <div className="flex gap-3 mb-4">
-            {/* 地点统计按钮 */}
             <button
               onClick={() => setShowLocationStat(true)}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 showLocationStat
-                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
-                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
+                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]'
+                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]'
                 }`}
             >
               地点统计
             </button>
 
-            {/* 年份统计按钮 */}
             <button
               onClick={() => setShowLocationStat(false)}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 !showLocationStat
-                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]' // 选中态：背景不变，文字改为指定变量
-                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]' // 未选中态：背景不变，文字改为指定变量
+                  ? 'bg-[var(--color-brand)] text-[var(--color-brand-button)]'
+                  : 'bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)]'
                 }`}
             >
               年份统计
             </button>
+
+            {/* 核心改动：替换为 Link 组件，保留所有样式 */}
+            <Link
+              to={`${getBasePath()}/summary`}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 bg-gray-300 dark:bg-gray-600 text-[var(--color-brand-button)] hover:bg-[var(--color-brand)]`}
+            >
+              数据分析
+            </Link>
           </div>
         )}
 
@@ -449,9 +493,10 @@ const Index = () => {
             changeCity={changeCity}
             changeType={changeType}
             changeTitle={changeTitle}
+            onClickTypeInYear={changeTypeInYear}
           />
         ) : (
-          <YearsStat year={year} onClick={changeYear} />
+          <YearsStat year={year} onClick={changeYear} onClickTypeInYear={changeTypeInYear}/>
         )}
       </div>
       <div className="w-full lg:w-3/4" id="map-container">

@@ -202,6 +202,16 @@ const locationForRun = (
     }
   }
 
+  // 有一笔数据位置反推数据不对，手动修复
+  /*\u8299\u84c9\u4e2d\u8def	芙蓉中路	长沙市的一条核心主干道
+    \u57ce\u5357\u8def\u8857\u9053	城南路街道	天心区下辖的街道办
+    \u5929\u5fc3\u533a	天心区	长沙市的市辖区（核心城区）
+     \u6e56\u5357\u7701	湖南省	省级行政区
+       410011	410011	附带编码（非标准行政代码）
+        \u4e2d\u56fd	中国	国家*/
+  if (location.includes('\u8299\u84c9\u4e2d\u8def')) {
+    city = '长沙市';
+  }
   const r = { country, province, city, coordinate };
   locationCache.set(run.run_id, r);
   return r;
@@ -313,8 +323,12 @@ const titleForType = (type: string): string => {
       return RUN_TITLES.COROS_RIDE_TITLE;
     case 'hiking':
       return RUN_TITLES.COROS_HIKE_TITLE;
+    case 'walking':
+      return RUN_TITLES.COROS_WALK_TITLE;
     case 'generic':
       return RUN_TITLES.COROS_GENERIC_TITLE;
+    case 'swimming':
+      return RUN_TITLES.COROS_SWIM_TITLE;
     case 'trail':
       return RUN_TITLES.COROS_TRAIL_RUN_TITLE;
     case 'track':
@@ -356,6 +370,7 @@ const typeForRun = (run: Activity): string => {
   const type = run.type;
   const subtype = run.subtype;
   const distance = run.distance / 1000; // 改用const（无重新赋值，更规范）
+  const location_country = run.location_country;
 
   // 打印关键参数和计算结果（方便调试）
   // console.log('===== typeForRun 函数调试信息 =====');
@@ -374,7 +389,7 @@ const typeForRun = (run: Activity): string => {
         result = 'trail';
       } else if(subtype == 'track'){
         result = 'track';
-      } else if(subtype == 'indoor_running'){ // 修正为else if，避免冗余判断
+      } else if(subtype == 'indoor_running' || location_country == ''){ // 高驰旧版跑步机无子类别
         result = 'indoor_running';
       } else if (distance >= 42.2) {
         result = 'Full Marathon';
@@ -560,22 +575,46 @@ const filterCityRuns = (run: Activity, city: string) => {
 const filterTitleRuns = (run: Activity, title: string) =>
   titleForRun(run) === title;
 
-const filterTypeRuns = (run: Activity, type: string) => {
+const filterTypeName = (run: Activity, typeName: string) => {
   /* 适配高驰修改 */
-  switch (type) {
-    case 'Full Marathon':
+  switch (typeName) {
+    case '全程马拉松':
       return (
         (run.type === 'Run' || run.type === 'Trail Run') && run.distance >= 42200
       );
-    case 'Half Marathon':
+    case '半程马拉松':
       return (
         (run.type === 'Run' || run.type === 'Trail Run') &&
         run.distance < 42200 &&
         run.distance >= 21100
       );
+    case '越野跑':
+      return (
+        run.type === 'Run' && run.subtype === 'trail'
+      );
     default:
       return run.type === type;
   }
+};
+
+const filterTypeRuns = (run: Activity, type: string) => {
+  return run.type === type;
+  // console.log('原始run:', run.type);
+/*  switch (type) {
+    case 'cycling':
+      return '骑行';
+    case 'hiking':
+      return '徒步';
+    case 'walking':
+      return '健走';
+    case 'generic':
+      return '户外有氧';
+    case 'swimming':
+      return '游泳';
+    default:
+      // 跑步
+      return 'Run'
+  }*/
 };
 
 const filterAndSortRuns = (
@@ -674,6 +713,7 @@ export {
   sortDateFuncReverse,
   getBoundsForGeoData,
   filterTypeRuns,
+  filterTypeName,
   colorFromType,
   formatRunTime,
   convertMovingTime2Sec,

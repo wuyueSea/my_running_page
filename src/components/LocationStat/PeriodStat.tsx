@@ -15,7 +15,7 @@ const PeriodStat = ({ onClick }: { onClick: (_period: string) => void }) => {
             //description={type + (times > 1 ? 's' : '')}
             description={` ${times} 次`}
             citySize={2}
-            onClick={() => onClick(type)}
+            onClick={() => onClick(periodName)}
           />
         ))}
       </section>

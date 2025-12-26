@@ -14,8 +14,9 @@ const activityTypeMap = {
   Run: '跑步',
   hiking: '徒步',
   cycling: '骑行',
-  walking: '步行',
-  generic : '户外有氧'
+  walking: '健走',
+  generic : '户外有氧',
+  swimming : '游泳'
 };
 
 // 新增：获取中文描述的工具函数（带兜底）
@@ -25,10 +26,10 @@ const getActivityDesc = (type: string) => {
 };
 
 const YearStat = ({
-                    year,
-                    onClick,
-                    onClickTypeInYear,
-                  }: {
+  year,
+  onClick,
+  onClickTypeInYear,
+}: {
   year: string;
   onClick: (_year: string) => void;
   onClickTypeInYear: (_year: string, _type: string) => void;
@@ -91,9 +92,10 @@ const YearStat = ({
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
+        {/*<Stat value={year} description=" 旅程" />*/}
         <Stat
-          value={year === '全部' ? '' : year}
-          description={year === '全部' ? '' : ' 旅程'}
+          value={year === 'Total' ? '' : year}
+          description={year === 'Total' ? '' : ' 旅程'}
         />
         {sumDistance > 0 && (
           <WorkoutStat

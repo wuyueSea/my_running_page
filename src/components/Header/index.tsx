@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react'; // 新增useEffect
+import { useState, useEffect } from 'react';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { useTheme, Theme } from '@/hooks/useTheme';
 import styles from './style.module.css';
 
 const Header = () => {
   const { logo, siteUrl, navLinks } = useSiteMetadata();
-  const { theme: currentTheme, setTheme } = useTheme(); // 新增：获取当前激活的主题
+  const { theme: currentTheme, setTheme } = useTheme();
   const [currentIconIndex, setCurrentIconIndex] = useState(0);
 
   const icons = [
@@ -52,27 +52,20 @@ const Header = () => {
     },
   ];
 
-  // 初始化：根据当前主题，设置待切换的图标索引
   useEffect(() => {
     if (currentTheme === 'light') {
-      // 当前是light，要切换到dark → 显示dark图标
       setCurrentIconIndex(1);
     } else {
-      // 当前是dark，要切换到light → 显示light图标
       setCurrentIconIndex(0);
     }
   }, [currentTheme]);
 
   const handleToggle = () => {
-    // 确定要切换的目标主题
     const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
-    // 更新图标索引（对应目标主题）
     setCurrentIconIndex(targetTheme === 'light' ? 0 : 1);
-    // 设置新主题
     setTheme(targetTheme as Theme);
   };
 
-  // 当前按钮显示的是「待切换的主题」图标
   const targetIcon = icons[currentIconIndex];
 
   return (
@@ -86,21 +79,62 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex w-3/4 items-center justify-end text-right">
-          {navLinks.map((n, i) => (
-            <a
-              key={i}
-              href={n.url}
-              className="mr-3 text-lg lg:mr-4 lg:text-base"
-            >
-              {n.name}
-            </a>
-          ))}
+          {navLinks.map((n, i) => {
+            if (!n.isDropdown) {
+              return (
+                <a
+                  key={i}
+                  href={n.url}
+                  className="mr-3 text-lg lg:mr-4 lg:text-base hover:text-[var(--color-brand)] transition-colors"
+                  target={n.url.startsWith('http') ? '_blank' : '_self'}
+                  rel="noopener noreferrer"
+                >
+                  {n.name}
+                </a>
+              );
+            }
+
+            return (
+              <div
+                key={i}
+                className="relative group mr-3 lg:mr-4"
+              >
+                <button
+                  className="text-lg lg:text-base bg-transparent border-0 cursor-pointer flex items-center gap-1 hover:text-[var(--color-brand)] transition-colors"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {n.name}
+                  <svg className="w-3 h-3 ml-0.5" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 4L6 7L9 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-50">
+                  <div className="bg-[#f8f9fa] dark:bg-[#2d3748] rounded-md shadow-md border border-gray-200 dark:border-gray-700 w-24 overflow-hidden">
+                    {n.dropdownItems.map((item, idx) => (
+                      <a
+                        key={idx}
+                        href={item.url}
+                        className="block px-4 py-2.5 text-base text-left text-gray-800 dark:text-gray-200 hover:bg-[var(--color-head-nav)] transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
           <div className="ml-4 flex items-center space-x-2">
             <button
               type="button"
               onClick={handleToggle}
               className={`${styles.themeButton} ${styles.themeButtonActive}`}
-              aria-label={`Switch to ${targetIcon.id} theme`} // 提示：切换到待切换的主题
+              aria-label={`Switch to ${targetIcon.id} theme`}
               title={`Switch to ${targetIcon.id} theme`}
             >
               <div className={styles.iconWrapper}>{targetIcon.svg}</div>

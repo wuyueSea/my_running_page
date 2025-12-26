@@ -1069,6 +1069,12 @@ export const chinaCities: ICity[] = [
     city: '01',
   },
   {
+    code: '410011',
+    name: '长沙市',
+    province: '43',
+    city: '01',
+  },
+  {
     code: '430200',
     name: '株洲市',
     province: '43',

@@ -14,14 +14,14 @@ interface ILocationStatProps {
   changeCity: (_city: string) => void;
   changeType: (_type: string) => void;
   changeTitle: (_title: string) => void;
+  onClickTypeInYear: (_year: string, _type: string) => void;
 }
 
 const LocationStat = ({
-                        changeYear,
-                        changeCity,
-                        changeType,
-                        changeTitle,
-                      }: ILocationStatProps) => {
+  changeYear,
+  changeCity,
+  changeType,
+  changeTitle, onClickTypeInYear,}: ILocationStatProps) => {
   // 定义状态管理当前激活的标签（初始显示年份统计）
   const [activeTab, setActiveTab] = useState<'year' | 'cities' | 'periodDetail'>('year');
 
@@ -80,7 +80,12 @@ const LocationStat = ({
       </div>
 
       {/* 3. 根据激活标签显示对应组件 */}
-      {activeTab === 'year' && <YearStat year="全部" onClick={changeYear} />}
+      {activeTab === 'year' &&
+      <YearStat
+        year="Total"
+        onClick={changeYear}
+        onClickTypeInYear={onClickTypeInYear}
+      />}
       {activeTab === 'cities' && <CitiesStat onClick={changeCity} />}
       {activeTab === 'periodDetail' && <PeriodStatDetail onClick={changeTitle} />}
     </div>

@@ -76,7 +76,9 @@ const RIDE_TITLE = IS_CHINESE ? '骑行' : 'Ride';
 /*高驰运动类型*/
 const COROS_RIDE_TITLE = IS_CHINESE ? '骑行' : 'cycling';
 const COROS_HIKE_TITLE = IS_CHINESE ? '徒步' : 'hiking';
+const COROS_WALK_TITLE = IS_CHINESE ? '健走' : 'walking';
 const COROS_GENERIC_TITLE = IS_CHINESE ? '户外有氧' : 'generic';
+const COROS_SWIM_TITLE = IS_CHINESE ? '游泳' : 'swimming';
 /*高驰运动子类型*/
 const COROS_TRACK_RUN_TITLE = IS_CHINESE ? '运动场跑步' : 'track';
 const COROS_IDOOR_RUN_TITLE = IS_CHINESE ? '跑步机' : 'indoor_running';
@@ -104,19 +106,21 @@ const TOTAL_ELEVATION_GAIN_TITLE = IS_CHINESE
   ? '总海拔爬升'
   : 'Total Elevation Gain';
 const AVERAGE_HEART_RATE_TITLE = IS_CHINESE ? '平均心率' : 'Average Heart Rate';
-const YEARLY_TITLE = IS_CHINESE ? 'Year' : 'Yearly';
-const MONTHLY_TITLE = IS_CHINESE ? 'Month' : 'Monthly';
-const WEEKLY_TITLE = IS_CHINESE ? 'Week' : 'Weekly';
-const DAILY_TITLE = IS_CHINESE ? 'Day' : 'Daily';
+const YEARLY_TITLE = IS_CHINESE ? '年' : 'Yearly';
+const MONTHLY_TITLE = IS_CHINESE ? '月' : 'Monthly';
+const WEEKLY_TITLE = IS_CHINESE ? '周' : 'Weekly';
+const DAILY_TITLE = IS_CHINESE ? '日' : 'Daily';
 const LOCATION_TITLE = IS_CHINESE ? 'Location' : 'Location';
-const HOME_PAGE_TITLE = IS_CHINESE ? '首页' : 'Home';
+const HOME_PAGE_TITLE = IS_CHINESE ? '返回首页' : 'Home';
 
 const LOADING_TEXT = IS_CHINESE ? '加载中...' : 'Loading...';
 
 const RUN_TITLES = {
   COROS_RIDE_TITLE,
   COROS_HIKE_TITLE,
+  COROS_WALK_TITLE,
   COROS_GENERIC_TITLE,
+  COROS_SWIM_TITLE,
   COROS_IDOOR_RUN_TITLE,
   COROS_TRAIL_RUN_TITLE,
   COROS_TRACK_RUN_TITLE,
@@ -144,6 +148,7 @@ const TYPES_MAPPING = {
   'cycling': RUN_TITLES.COROS_RIDE_TITLE,
   'hiking': RUN_TITLES.COROS_HIKE_TITLE,
   'generic': RUN_TITLES.COROS_GENERIC_TITLE,
+  'swimming': RUN_TITLES.COROS_SWIM_TITLE,
   'indoor_running': RUN_TITLES.COROS_IDOOR_RUN_TITLE,
   'trail': RUN_TITLES.COROS_TRAIL_RUN_TITLE,
   'track': RUN_TITLES.COROS_TRACK_RUN_TITLE,
