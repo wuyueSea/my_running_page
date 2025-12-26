@@ -215,8 +215,10 @@ const Index = () => {
       if (year != 'Total') {
         setYear(year);
         setCurrentFilter({
-          item: type,
-          func: filterTypeRuns
+          ​item: year,
+          func: filterYearRuns,
+​          item2: type,
+          func2: filterTypeRuns
         });
       } else {
         setYear(thisYear);
